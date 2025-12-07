@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nes-config
+  namespace: nes
+data:
+  coordinator.yaml: |
+    logLevel: LOG_ERROR
+    coordinatorHost: coordinator
+    worker:
+      localWorkerHost: coordinator
+    restIp: 0.0.0.0
+
+    logicalSources:
+      - logicalSourceName: windTurbines
+        fields:
+          - name: producerId
+            type: INT8
+          - name: groupId
+            type: INT8
+          - name: producedPower
+            type: INT32
+          - name: timestamp
+            type: UINT64
+      - logicalSourceName: solarPanels
+        fields:
+          - name: producerId
+            type: INT8
+          - name: groupId
+            type: INT8
+          - name: producedPower
+            type: INT32
+          - name: timestamp
+            type: UINT64
+      - logicalSourceName: consumers
+        fields:
+          - name: consumerId
+            type: INT8
+          - name: sectorId
+            type: INT8
+          - name: consumedPower
+            type: INT32
+          - name: consumerType
+            type: TEXT
+          - name: timestamp
+            type: UINT64
+
+    optimizer:
+      queryMergerRule: "DefaultQueryMergerRule"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coordinator
+  namespace: nes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coordinator
+  template:
+    metadata:
+      labels:
+        app: coordinator
+    spec:
+      containers:
+        - name: coordinator
+          image: nebulastream/nes-executable-image:latest
+          command: ["nesCoordinator"]
+          args: ["--configPath=/config/coordinator.yaml"]
+          ports:
+            - containerPort: 8081
+          volumeMounts:
+            - name: nes-config
+              mountPath: /config
+      volumes:
+        - name: nes-config
+          configMap:
+            name: nes-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coordinator
+  namespace: nes
+spec:
+  selector:
+    app: coordinator
+  ports:
+    - name: http
+      port: 8081
+      targetPort: 8081
+      protocol: TCP
+  type: ClusterIP
