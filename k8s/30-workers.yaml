@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producers-worker
+  namespace: nes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: producers-worker
+  template:
+    metadata:
+      labels:
+        app: producers-worker
+    spec:
+      hostname: producers-worker
+      containers:
+        - name: worker
+          image: nebulastream/nes-executable-image:latest
+          command: ["nesWorker"]
+          args: ["--configPath=/config/producers-worker.yaml"]
+          volumeMounts:
+            - name: nes-config
+              mountPath: /config
+      volumes:
+        - name: nes-config
+          configMap:
+            name: nes-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumers-worker-1
+  namespace: nes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumers-worker-1
+  template:
+    metadata:
+      labels:
+        app: consumers-worker-1
+    spec:
+      hostname: consumers-worker-1
+      containers:
+        - name: worker
+          image: nebulastream/nes-executable-image:latest
+          command: ["nesWorker"]
+          args: ["--configPath=/config/consumers-worker-1.yaml"]
+          volumeMounts:
+            - name: nes-config
+              mountPath: /config
+      volumes:
+        - name: nes-config
+          configMap:
+            name: nes-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumers-worker-2
+  namespace: nes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumers-worker-2
+  template:
+    metadata:
+      labels:
+        app: consumers-worker-2
+    spec:
+      hostname: consumers-worker-2
+      containers:
+        - name: worker
+          image: nebulastream/nes-executable-image:latest
+          command: ["nesWorker"]
+          args: ["--configPath=/config/consumers-worker-2.yaml"]
+          volumeMounts:
+            - name: nes-config
+              mountPath: /config
+      volumes:
+        - name: nes-config
+          configMap:
+            name: nes-config
+

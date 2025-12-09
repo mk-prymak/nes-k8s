@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datatown
+  namespace: nes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: datatown
+  template:
+    metadata:
+      labels:
+        app: datatown
+    spec:
+      containers:
+        - name: datatown
+          image: nebulastream/nes-smart-city-image:latest
+          ports:
+            - containerPort: 9003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: datatown
+  namespace: nes
+spec:
+  selector:
+    app: datatown
+  ports:
+    - name: http
+      port: 9003
+      targetPort: 9003
+      nodePort: 30003
+  type: NodePort
+
