@@ -37,10 +37,6 @@ kubectl port-forward -n nes svc/mosquitto 9001:9001 &
 PID_MOSQUITTO=$!
 echo "Forwarding Mosquitto Websockets (PID $PID_MOSQUITTO)..."
 
-kubectl port-forward -n nes svc/mosquitto 9001:9001 &
-PID_MOSQUITTO=$!
-echo "Forwarding Mosquitto (PID $PID_MOSQUITTO)..."
-
 echo ""
 echo "Press Ctrl+C to stop all port-forwards."
 
