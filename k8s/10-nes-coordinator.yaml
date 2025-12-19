@@ -12,36 +12,30 @@ data:
     restIp: 0.0.0.0
 
     logicalSources:
-      - logicalSourceName: windTurbines
+      - logicalSourceName: pulse
         fields:
-          - name: producerId
-            type: INT8
-          - name: groupId
-            type: INT8
-          - name: producedPower
+          - name: deviceId
+            type: INT32
+          - name: bpm
             type: INT32
           - name: timestamp
             type: UINT64
-      - logicalSourceName: solarPanels
+      - logicalSourceName: bloodPressure
         fields:
-          - name: producerId
-            type: INT8
-          - name: groupId
-            type: INT8
-          - name: producedPower
+          - name: deviceId
+            type: INT32
+          - name: systolic
+            type: INT32
+          - name: diastolic
             type: INT32
           - name: timestamp
             type: UINT64
-      - logicalSourceName: consumers
+      - logicalSourceName: spo2
         fields:
-          - name: consumerId
-            type: INT8
-          - name: sectorId
-            type: INT8
-          - name: consumedPower
+          - name: deviceId
             type: INT32
-          - name: consumerType
-            type: TEXT
+          - name: spo2
+            type: INT32
           - name: timestamp
             type: UINT64
 
@@ -52,55 +46,37 @@ data:
     coordinatorHost: coordinator
     localWorkerHost: producers-worker
     physicalSources:
-      - logicalSourceName: solarPanels
-        physicalSourceName: solarPanels
+      - logicalSourceName: pulse
+        physicalSourceName: pulse
         type: MQTT_SOURCE
         configuration:
           url: ws://mosquitto:9001
-          topic: solarPanels
-      - logicalSourceName: windTurbines
-        physicalSourceName: windTurbines
-        type: MQTT_SOURCE
-        configuration:
-          url: ws://mosquitto:9001
-          topic: windTurbines
-    workerId: 3
+          topic: icu/pulse
+    workerId: 1
   consumers-worker-1.yaml: |
     logLevel: LOG_ERROR
     coordinatorHost: coordinator
     localWorkerHost: consumers-worker-1
     physicalSources:
-      - logicalSourceName: consumers
-        physicalSourceName: streetLights
+      - logicalSourceName: bloodPressure
+        physicalSourceName: bloodPressure
         type: MQTT_SOURCE
         configuration:
           url: ws://mosquitto:9001
-          topic: streetLights
+          topic: icu/bloodPressure
     workerId: 2
   consumers-worker-2.yaml: |
     logLevel: LOG_ERROR
     coordinatorHost: coordinator
     localWorkerHost: consumers-worker-2
     physicalSources:
-      - logicalSourceName: consumers
-        physicalSourceName: households
+      - logicalSourceName: spo2
+        physicalSourceName: spo2
         type: MQTT_SOURCE
         configuration:
           url: ws://mosquitto:9001
-          topic: households
-      - logicalSourceName: consumers
-        physicalSourceName: offices
-        type: MQTT_SOURCE
-        configuration:
-          url: ws://mosquitto:9001
-          topic: offices
-      - logicalSourceName: consumers
-        physicalSourceName: factories
-        type: MQTT_SOURCE
-        configuration:
-          url: ws://mosquitto:9001
-          topic: factories
-    workerId: 4
+          topic: icu/spo2
+    workerId: 3
 ---
 apiVersion: apps/v1
 kind: Deployment
