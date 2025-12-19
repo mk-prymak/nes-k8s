@@ -26,6 +26,10 @@ kubectl port-forward -n nes svc/datatown 30003:9003 &
 PID_DATATOWN=$!
 echo "Forwarding Datatown (PID $PID_DATATOWN)..."
 
+kubectl port-forward -n nes svc/mosquitto 9001:9001 &
+PID_MOSQUITTO=$!
+echo "Forwarding Mosquitto (PID $PID_MOSQUITTO)..."
+
 echo ""
 echo "Press Ctrl+C to stop all port-forwards."
 
