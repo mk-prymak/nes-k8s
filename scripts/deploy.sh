@@ -30,7 +30,6 @@ kubectl apply -f k8s/10-nes-coordinator.yaml
 kubectl apply -f k8s/20-mosquitto.yaml
 kubectl apply -f k8s/30-workers.yaml
 kubectl apply -f k8s/40-ui.yaml
-kubectl apply -f k8s/50-datatown.yaml
 kubectl apply -f k8s/60-grafana.yaml
 
 echo "Waiting for pods to be ready (timeout 300s)..."
@@ -44,7 +43,6 @@ echo "Accessing Services:"
 echo "If using Docker Desktop Kubernetes (localhost):"
 echo "- NES UI:       http://localhost:30000"
 echo "- Grafana:      http://localhost:30001"
-echo "- Datatown:     http://localhost:30003"
 echo ""
 echo "If using Minikube:"
 echo "Run 'minikube service list -n nes' to see the URLs."
