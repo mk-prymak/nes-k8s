@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/nes-k8s/icu/blood_pressure.schema.json",
+  "title": "ICU Blood Pressure Message (v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "deviceId", "icuId", "bedId", "timestampMs", "systolic", "diastolic"],
+  "properties": {
+    "contractVersion": { "type": "integer", "const": 1 },
+    "deviceId": { "type": "string", "minLength": 1 },
+    "icuId": { "type": "string", "minLength": 1 },
+    "bedId": { "type": "string", "minLength": 1 },
+    "timestampMs": { "type": "integer", "minimum": 0 },
+    "systolic": { "type": "integer", "minimum": 0, "maximum": 400 },
+    "diastolic": { "type": "integer", "minimum": 0, "maximum": 300 }
+  }
+}
+
+

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/nes-k8s/icu/pulse.schema.json",
+  "title": "ICU Pulse Message (v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "deviceId", "icuId", "bedId", "timestampMs", "bpm"],
+  "properties": {
+    "contractVersion": { "type": "integer", "const": 1 },
+    "deviceId": { "type": "string", "minLength": 1 },
+    "icuId": { "type": "string", "minLength": 1 },
+    "bedId": { "type": "string", "minLength": 1 },
+    "timestampMs": { "type": "integer", "minimum": 0 },
+    "bpm": { "type": "integer", "minimum": 0, "maximum": 300 }
+  }
+}
+
+
