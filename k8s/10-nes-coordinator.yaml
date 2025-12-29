@@ -41,41 +41,41 @@ data:
 
     optimizer:
       queryMergerRule: "DefaultQueryMergerRule"
-  producers-worker.yaml: |
+  ingest-pulse.yaml: |
     logLevel: LOG_ERROR
     coordinatorHost: coordinator
-    localWorkerHost: producers-worker
+    localWorkerHost: ingest-pulse
     physicalSources:
       - logicalSourceName: pulse
         physicalSourceName: pulse
         type: MQTT_SOURCE
         configuration:
           url: ws://mosquitto:9001
-          topic: icu/pulse
+          topic: "$share/pulseGroup/icu/pulse"
     workerId: 1
-  consumers-worker-1.yaml: |
+  ingest-bloodpressure.yaml: |
     logLevel: LOG_ERROR
     coordinatorHost: coordinator
-    localWorkerHost: consumers-worker-1
+    localWorkerHost: ingest-bloodpressure
     physicalSources:
       - logicalSourceName: bloodPressure
         physicalSourceName: bloodPressure
         type: MQTT_SOURCE
         configuration:
           url: ws://mosquitto:9001
-          topic: icu/bloodPressure
+          topic: "$share/bp/icu/bloodPressure"
     workerId: 2
-  consumers-worker-2.yaml: |
+  ingest-spo2.yaml: |
     logLevel: LOG_ERROR
     coordinatorHost: coordinator
-    localWorkerHost: consumers-worker-2
+    localWorkerHost: ingest-spo2
     physicalSources:
       - logicalSourceName: spo2
         physicalSourceName: spo2
         type: MQTT_SOURCE
         configuration:
           url: ws://mosquitto:9001
-          topic: icu/spo2
+          topic: "$share/spo2/icu/spo2"
     workerId: 3
 ---
 apiVersion: apps/v1
@@ -101,6 +101,7 @@ spec:
           args: ["--configPath=/config/coordinator.yaml"]
           ports:
             - containerPort: 8081
+            - containerPort: 4000
           volumeMounts:
             - name: nes-config
               mountPath: /config
@@ -122,4 +123,8 @@ spec:
       port: 8081
       targetPort: 8081
       protocol: TCP
+    - name: rpc
+      port: 4000
+      targetPort: 4000
+      protocol: TCP 
   type: ClusterIP

@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: producers-worker
+  name: ingest-pulse
   namespace: nes
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: producers-worker
+      app: ingest-pulse
   template:
     metadata:
       labels:
-        app: producers-worker
+        app: ingest-pulse
     spec:
-      hostname: producers-worker
+      hostname: ingest-pulse
       containers:
         - name: worker
           image: nebulastream/nes-executable-image:latest
           command: ["nesWorker"]
-          args: ["--configPath=/config/producers-worker.yaml"]
+          args: ["--configPath=/config/ingest-pulse.yaml"]
           volumeMounts:
             - name: nes-config
               mountPath: /config
@@ -30,24 +30,24 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: consumers-worker-1
+  name: ingest-bloodpressure
   namespace: nes
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: consumers-worker-1
+      app: ingest-bloodpressure
   template:
     metadata:
       labels:
-        app: consumers-worker-1
+        app: ingest-bloodpressure
     spec:
-      hostname: consumers-worker-1
+      hostname: ingest-bloodpressure
       containers:
         - name: worker
           image: nebulastream/nes-executable-image:latest
           command: ["nesWorker"]
-          args: ["--configPath=/config/consumers-worker-1.yaml"]
+          args: ["--configPath=/config/ingest-bloodpressure.yaml"]
           volumeMounts:
             - name: nes-config
               mountPath: /config
@@ -59,24 +59,24 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: consumers-worker-2
+  name: ingest-spo2
   namespace: nes
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: consumers-worker-2
+      app: ingest-spo2
   template:
     metadata:
       labels:
-        app: consumers-worker-2
+        app: ingest-spo2
     spec:
-      hostname: consumers-worker-2
+      hostname: ingest-spo2
       containers:
         - name: worker
           image: nebulastream/nes-executable-image:latest
           command: ["nesWorker"]
-          args: ["--configPath=/config/consumers-worker-2.yaml"]
+          args: ["--configPath=/config/ingest-spo2.yaml"]
           volumeMounts:
             - name: nes-config
               mountPath: /config
@@ -84,4 +84,3 @@ spec:
         - name: nes-config
           configMap:
             name: nes-config
-
